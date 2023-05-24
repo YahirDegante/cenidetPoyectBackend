@@ -1,0 +1,17 @@
+{
+  "name": "prouetcocenidet",
+  "version": "1.0.0",
+  "description": "cenidet-backend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.2.0"
+  }
+}
