@@ -3,16 +3,16 @@ const cors = require('cors');
 const { userRouter } = require('../modules/routes.js');
 
 require('dotenv').config();
-const app = express(); 
+const app = express();
 
-app.set('port', process.env.PORT || 3001);
+app.set('port', process.env.PORT || 3000);
 
 app.use(cors(
-    origins="*"
+    origins = "*"
 ));
 
 app.use(express.json(
-    limit='50mb'
+    limit = '50mb'
 ));
 
 app.get('/', (req, res) => {
@@ -23,4 +23,4 @@ app.get('/', (req, res) => {
 //rutas
 app.use('/api/users', userRouter);
 
-module.exports = {app};
+module.exports = { app };

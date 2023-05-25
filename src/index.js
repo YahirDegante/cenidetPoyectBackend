@@ -1,11 +1,15 @@
 const { app } = require('./config/express');
-const { satrtConnection } = require('./utils/database');
+const { startConnection } = require('./utils/database');
 
 const main = () => {
-    app.listen(app.get('port'), () => {
-        console.log(`Server on port http://localhost:${app.get('port')}`);
-    });
+  app.listen(app.get('port'));
+  console.log(`
+  -------------------------------
+   Cenidet server is running in              
+    http://localhost:${app.get('port')}/     
+  -------------------------------
+  `);
 }
 
 main();
-satrtConnection();
+startConnection();
