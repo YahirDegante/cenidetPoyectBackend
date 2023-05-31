@@ -68,7 +68,4 @@ const userSchema = new Schema({
 }
 );
 
-
-
-//1.1 'Users' es como se exporta el modelo
 module.exports = mongoose.model('Users', userSchema);

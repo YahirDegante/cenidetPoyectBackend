@@ -4,42 +4,52 @@ const { Router, Response } = require('express');
 const Users = require('./user.js');
 const nodemailer = require('nodemailer');
 
+const { findAllUsers, saveUser, findUserById, updateUserById } = require('./user.gateway.js');
+const { validateError } = require('../../utils/validationHandler.js');
+
 //Traer todos los usuarios
 async function getUsers(req, res = Response) {
     try {
-        const users = await Users.find();
-        res.json(users);
+        const users = await findAllUsers();
+        if (!users) res.status(404).json({ message: 'Users not found' });
+        res.status(200).json(users);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Error al obtener los usuarios' });
+        const message = validateError(err);
+        res.status(400).json({ message });
     }
 }
 
 //Crear un usuario
 const createUser = async (req, res = Response) => {
     try {
-        const user = new Users(req.body);
-        await user.save();
-        res.status(201).json({ message: 'Usuario creado correctamente' });
-    } catch (error) {
+        //falta validar id, correo, num_cvu
+        const user = await saveUser({ ...req.body, status: 1 });
+        const userCreated = {
+            id: user._id,
+            role: user.role,
+            name: user.names + ' ' + user.last_names,
+            status: user.status,
+        }
+        res.status(201).json(userCreated);
+    }
+    catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Error al crear el usuario' });
+        const message = validateError(err);
+        res.status(400).json({ message });
     }
 };
 
 //Obtener un usuario por id
 const getUserById = async (req, res = Response) => {
     try {
-        const userId = req.params.id;
-        const user = await Users.findById(userId);
-
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-        res.json(user);
+        const user = await findUserById(req.params.id);
+        if (!user) res.status(404).json({ message: 'User not found' });
+        res.status(200).json(user);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Error al obtener el usuario' });
+        const message = validateError(err);
+        res.status(400).json({ message });
     }
 };
 
@@ -48,17 +58,15 @@ const updateUser = async (req, res = Response) => {
     try {
         const userId = req.params.id;
         const updateUserData = req.body;
-        const user = await Users.findByIdAndUpdate(userId, updateUserData, { new: true });
-
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-        res.json(user, { message: 'Usuario actualizado correctamente' });
+        const user = await updateUserById(userId, updateUserData);
+        if (!user) res.status(404).json({ message: 'User not found' });
+        res.status(200).json(user);
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Error al actualizar el usuario' });
+        const message = validateError(err);
+        res.status(400).json({ message });
     }
-};
+};;
 
 //Eliminar un usuario por id
 const deleteUser = async (req, res = Response) => {
