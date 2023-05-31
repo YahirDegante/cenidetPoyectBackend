@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const { userRouter } = require('../modules/routes.js');
+const { externalAdvisorRouter } = require('../modules/routes.js');
+const nodemailer = require('nodemailer');
 
 require('dotenv').config();
 const app = express();
@@ -19,8 +21,9 @@ app.get('/', (req, res) => {
     res.send('Cenidet Backend');
 });
 
-
-//rutas
+// Rutas
 app.use('/api/users', userRouter);
+app.use('/api/externalAdvisors', externalAdvisorRouter);
+
 
 module.exports = { app };
